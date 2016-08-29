@@ -1,10 +1,9 @@
-package com.wbjacks.models;
+package com.wbjacks.data.models;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.EAGER;
 
 @Entity
@@ -18,14 +17,19 @@ public class Observer {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @ManyToMany(cascade = PERSIST, fetch = EAGER)
+    @ManyToMany(fetch = EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "observations",
             joinColumns = {@JoinColumn(name = "observer_id", nullable = false, updatable = false)},
             inverseJoinColumns = {@JoinColumn(name = "website_id", nullable = false, updatable = false)})
-    private final List<Website> websites = new ArrayList<>();
+    private final Set<Website> websites = new HashSet<>();
 
-    @SuppressWarnings("unused") // needed for Hibernate
     public Observer() {
+    }
+
+    public static Observer forEmail(String email) {
+        Observer observer = new Observer();
+        observer.email = email;
+        return observer;
     }
 
     public long getObserverId() {
@@ -36,11 +40,11 @@ public class Observer {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public Set<Website> getWebsites() {
+        return websites;
     }
 
-    public List<Website> getWebsites() {
-        return websites;
+    public void setObserverId(long observerId) {
+        this.observerId = observerId;
     }
 }

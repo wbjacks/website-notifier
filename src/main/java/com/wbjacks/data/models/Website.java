@@ -1,40 +1,36 @@
-package com.wbjacks.models;
+package com.wbjacks.data.models;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Table(name = "websites")
 public class Website {
+    @ManyToMany(mappedBy = "websites", fetch = EAGER)
+    private final Set<Observer> observers = new HashSet<>();
     @Id
     @GeneratedValue
     @Column(name = "website_id", unique = true, nullable = false)
-        private long websiteId;
-
+    private long websiteId;
     @Column(name = "url", unique = true, nullable = false)
     private String url;
-
     @Column(name = "lastVisited")
     private Date lastVisited;
-
     @Column(name = "hash")
     private String hash;
-
-    @ManyToMany(mappedBy = "websites", cascade = PERSIST, fetch = EAGER)
-    private final List<Observer> observers = new ArrayList<>();
 
     private Website() {
         /* For hibernate */
     }
 
-    // TODO: (wbjacks) for test, hide me
-    public Website(String url) {
-        this.url = url;
+    public static Website forUrl(String url) {
+        Website website = new Website();
+        website.url = url;
+        return website;
     }
 
     public String getUrl() {
@@ -54,7 +50,7 @@ public class Website {
         return hash;
     }
 
-    public List<Observer> getObservers() {
+    public Set<Observer> getObservers() {
         return observers;
     }
 
