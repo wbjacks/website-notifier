@@ -10,16 +10,16 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class DaoPersistenceTest extends PersistentTestBase {
+public class WebsiteDaoImplPersistenceTest extends PersistentTestBase {
     @Test
     public void testSaveObserverSavesNewObserverAndNewWebsite() {
         Observer observer = Observer.forEmail("foo@bar.com");
         Website website = Website.forUrl("www.foo.com");
-        observer.getWebsites().add(website);
         website.getObservers().add(observer);
 
-        ObserverDaoImpl observerDao = new ObserverDaoImpl(new WebsiteDaoImpl());
-        observerDao.saveObserver(observer);
+        WebsiteDaoImpl websiteDao = new WebsiteDaoImpl(new ObserverDaoImpl());
+        websiteDao.saveWebsiteObservation(website);
+
         Session session = HibernateUtil.getReadOnlySession();
         Transaction transaction = session.beginTransaction();
         assertEquals(1, session.createCriteria(Observer.class).list().size());
@@ -32,17 +32,15 @@ public class DaoPersistenceTest extends PersistentTestBase {
     public void testSaveObserverSavesNewObserverAndExistingWebsite() {
         Observer observer1 = Observer.forEmail("foo@bar.com");
         Website website1 = Website.forUrl("www.foo.com");
-        observer1.getWebsites().add(website1);
         website1.getObservers().add(observer1);
 
-        ObserverDaoImpl observerDao = new ObserverDaoImpl(new WebsiteDaoImpl());
-        observerDao.saveObserver(observer1);
+        WebsiteDaoImpl websiteDao = new WebsiteDaoImpl(new ObserverDaoImpl());
+        websiteDao.saveWebsiteObservation(website1);
 
         Observer observer2 = Observer.forEmail("bar@bar.com");
         Website website2 = Website.forUrl("www.foo.com");
-        observer2.getWebsites().add(website2);
         website2.getObservers().add(observer2);
-        observerDao.saveObserver(observer2);
+        websiteDao.saveWebsiteObservation(website2);
 
         Session session = HibernateUtil.getReadOnlySession();
         Transaction transaction = session.beginTransaction();
@@ -56,17 +54,15 @@ public class DaoPersistenceTest extends PersistentTestBase {
     public void testSaveObserverSavesExistingObserverAndNewWebsite() {
         Observer observer1 = Observer.forEmail("foo@bar.com");
         Website website1 = Website.forUrl("www.foo.com");
-        observer1.getWebsites().add(website1);
         website1.getObservers().add(observer1);
 
-        ObserverDaoImpl observerDao = new ObserverDaoImpl(new WebsiteDaoImpl());
-        observerDao.saveObserver(observer1);
+        WebsiteDaoImpl websiteDao = new WebsiteDaoImpl(new ObserverDaoImpl());
+        websiteDao.saveWebsiteObservation(website1);
 
         Observer observer2 = Observer.forEmail("foo@bar.com");
         Website website2 = Website.forUrl("www.baz.com");
-        observer2.getWebsites().add(website2);
         website2.getObservers().add(observer2);
-        observerDao.saveObserver(observer2);
+        websiteDao.saveWebsiteObservation(website2);
 
         Session session = HibernateUtil.getReadOnlySession();
         Transaction transaction = session.beginTransaction();
@@ -80,17 +76,15 @@ public class DaoPersistenceTest extends PersistentTestBase {
     public void testSaveObserverSavesExistingObserverAndExistingWebsite() {
         Observer observer1 = Observer.forEmail("foo@bar.com");
         Website website1 = Website.forUrl("www.foo.com");
-        observer1.getWebsites().add(website1);
         website1.getObservers().add(observer1);
 
-        ObserverDaoImpl observerDao = new ObserverDaoImpl(new WebsiteDaoImpl());
-        observerDao.saveObserver(observer1);
+        WebsiteDaoImpl websiteDao = new WebsiteDaoImpl(new ObserverDaoImpl());
+        websiteDao.saveWebsiteObservation(website1);
 
         Observer observer2 = Observer.forEmail("foo@bar.com");
         Website website2 = Website.forUrl("www.foo.com");
-        observer2.getWebsites().add(website2);
         website2.getObservers().add(observer2);
-        observerDao.saveObserver(observer2);
+        websiteDao.saveWebsiteObservation(website2);
 
         Session session = HibernateUtil.getReadOnlySession();
         Transaction transaction = session.beginTransaction();

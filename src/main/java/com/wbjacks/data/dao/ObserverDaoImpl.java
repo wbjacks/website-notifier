@@ -12,34 +12,26 @@ import org.hibernate.criterion.Restrictions;
 
 @PetiteBean("observerDao")
 public class ObserverDaoImpl implements ObserverDao {
-    private final WebsiteDao _websiteDao;
 
     @PetiteInject
-    ObserverDaoImpl(WebsiteDao websiteDao) {
-        _websiteDao = websiteDao;
+    ObserverDaoImpl() {
     }
 
     @Override
-    public void saveObserver(Observer observer) throws HibernateException {
-        Website website = observer.getWebsites().stream().findFirst().get();
-        Session session = HibernateUtil.getSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            Observer existingObserver = (Observer) session.createCriteria(Observer.class).add(Restrictions.eq
-                    ("email", observer.getEmail())).uniqueResult();
-            if (existingObserver == null) {
-                observer.getWebsites().clear(); // websiteDao will add website
-                _websiteDao.saveWebsiteInsideDbSession(website, observer, session, false);
-                session.save(observer);
-            } else {
-                _websiteDao.saveWebsiteInsideDbSession(website, existingObserver, session, true);
+    public void saveObserverInsideDbSession(Website website, Observer observer, Session session) {
+        Observer existingObserver = (Observer) session.createCriteria(Observer.class).add(Restrictions.eq
+                ("email", observer.getEmail())).uniqueResult();
+        if (existingObserver == null) {
+            website.getObservers().add(observer);
+        } else {
+            if (isObserverNotPresentInWebsite(website, existingObserver)) {
+                website.getObservers().add(existingObserver);
             }
-            // NOTE: For now, only a single website is ever requested at once per email.
-        } catch (HibernateException e) {
-            transaction.rollback();
-            throw e;
         }
-        transaction.commit();
-        session.close();
+    }
+
+    private boolean isObserverNotPresentInWebsite(Website website, Observer observer) {
+        return !website.getObservers().stream().filter(websitesObserver -> websitesObserver.getEmail().equals
+                (observer.getEmail())).findFirst().isPresent();
     }
 }

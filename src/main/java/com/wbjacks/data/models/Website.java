@@ -5,12 +5,14 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.CascadeType.ALL;
 
 @Entity
 @Table(name = "websites")
 public class Website {
-    @ManyToMany(mappedBy = "websites", fetch = EAGER)
+    @ManyToMany(cascade = ALL)
+    @JoinTable(name = "observations", joinColumns = {@JoinColumn(name = "website_id", nullable = false, updatable =
+            false)}, inverseJoinColumns = {@JoinColumn(name = "observer_id", nullable = false, updatable = false)})
     private final Set<Observer> observers = new HashSet<>();
     @Id
     @GeneratedValue
