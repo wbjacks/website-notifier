@@ -1,6 +1,6 @@
-package com.wbjacks;
+package com.wbjacks.website_notifier;
 
-import com.wbjacks.request_service.ObservationRequestService;
+import com.wbjacks.website_notifier.request_service.ObservationRequestService;
 import jodd.petite.PetiteContainer;
 import jodd.petite.config.AutomagicPetiteConfigurator;
 import spark.Spark;

@@ -73,7 +73,7 @@
                     <!-- MainClass in mainfest make a executable jar -->
                     <archive>
                         <manifest>
-                            <mainClass>com.wbjacks.App</mainClass>
+                            <mainClass>com.wbjacks.website_notifier.App</mainClass>
                         </manifest>
                     </archive>
 

@@ -1,6 +1,6 @@
-package com.wbjacks.util;
+package com.wbjacks.website_notifier.util;
 
-import com.wbjacks.request_service.ObservationRequestService;
+import com.wbjacks.website_notifier.request_service.ObservationRequestService;
 import jodd.petite.PetiteContainer;
 
 import java.util.ArrayList;

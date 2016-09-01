@@ -1,9 +1,9 @@
-package com.wbjacks.data.dao;
+package com.wbjacks.website_notifier.data.dao;
 
-import com.wbjacks.data.models.Observer;
-import com.wbjacks.data.models.Website;
-import com.wbjacks.util.HibernateUtil;
-import com.wbjacks.util.PersistentTestBase;
+import com.wbjacks.website_notifier.data.models.Observer;
+import com.wbjacks.website_notifier.data.models.Website;
+import com.wbjacks.website_notifier.util.HibernateUtil;
+import com.wbjacks.website_notifier.util.PersistentTestBase;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Test;

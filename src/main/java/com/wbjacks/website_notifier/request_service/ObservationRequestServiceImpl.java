@@ -1,8 +1,8 @@
-package com.wbjacks.request_service;
+package com.wbjacks.website_notifier.request_service;
 
-import com.wbjacks.data.dao.WebsiteDao;
-import com.wbjacks.data.models.Observer;
-import com.wbjacks.data.models.Website;
+import com.wbjacks.website_notifier.data.dao.WebsiteDao;
+import com.wbjacks.website_notifier.data.models.Observer;
+import com.wbjacks.website_notifier.data.models.Website;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
 

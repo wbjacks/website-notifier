@@ -1,8 +1,8 @@
-package com.wbjacks.util;
+package com.wbjacks.website_notifier.util;
 
 import org.junit.After;
 
-import static com.wbjacks.util.HibernateUtil.shutdown;
+import static com.wbjacks.website_notifier.util.HibernateUtil.shutdown;
 
 public class PersistentTestBase {
     @After

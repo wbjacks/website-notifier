@@ -1,4 +1,4 @@
-package com.wbjacks.data.models;
+package com.wbjacks.website_notifier.data.models;
 
 import javax.persistence.*;
 

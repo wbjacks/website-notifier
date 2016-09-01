@@ -1,7 +1,7 @@
-package com.wbjacks.util;
+package com.wbjacks.website_notifier.util;
 
-import com.wbjacks.data.models.Observer;
-import com.wbjacks.data.models.Website;
+import com.wbjacks.website_notifier.data.models.Observer;
+import com.wbjacks.website_notifier.data.models.Website;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;

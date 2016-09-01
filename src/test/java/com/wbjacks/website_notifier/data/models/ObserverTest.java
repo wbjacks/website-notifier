@@ -1,7 +1,6 @@
-package com.wbjacks.data.models;
+package com.wbjacks.website_notifier.data.models;
 
-import com.wbjacks.util.PersistentTestBase;
-import org.hibernate.Transaction;
+import com.wbjacks.website_notifier.util.PersistentTestBase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
