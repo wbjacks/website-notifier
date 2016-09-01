@@ -10,6 +10,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @PetiteBean("websiteDao")
 public class WebsiteDaoImpl implements WebsiteDao {
     private final ObserverDao _observerDao;
@@ -42,6 +45,22 @@ public class WebsiteDaoImpl implements WebsiteDao {
         transaction.commit();
         session.close();
 
+    }
+
+    @Override
+    public List<Observer> getAllObserversForManualTesting() {
+        Session session = HibernateUtil.getReadOnlySession();
+        Transaction transaction = session.beginTransaction();
+        List<Observer> allObservers = new ArrayList<>();
+        try {
+            allObservers.addAll(session.createCriteria(Observer.class).list());
+        } catch (HibernateException e) {
+            transaction.rollback();
+            throw e;
+        }
+        transaction.commit();
+        session.close();
+        return allObservers;
     }
 
 }
