@@ -14,12 +14,20 @@ public class ConfigurationManager {
     }
 
     private EmailConfigurations _emailConfigurations;
+    private JobSchedulingConfigurations _jobSchedulingConfigurations;
 
     public EmailConfigurations getEmailConfigurations() {
         if (_emailConfigurations == null) {
             _emailConfigurations = new EmailConfigurations();
         }
         return _emailConfigurations;
+    }
+
+    public JobSchedulingConfigurations getJobSchedulingConfigurations() {
+        if (_jobSchedulingConfigurations == null) {
+            _jobSchedulingConfigurations = new JobSchedulingConfigurations();
+        }
+        return _jobSchedulingConfigurations;
     }
 
     public static class EmailConfigurations {
@@ -57,6 +65,17 @@ public class ConfigurationManager {
 
         public String getGmailHostName() {
             return GMAIL_HOST_NAME;
+        }
+    }
+
+    public static class JobSchedulingConfigurations {
+        private static final int JOB_WAIT_TIME_IN_SECONDS = 10;
+
+        private JobSchedulingConfigurations() {
+        }
+
+        public int getJobWaitTimeInSeconds() {
+            return JOB_WAIT_TIME_IN_SECONDS;
         }
     }
 }

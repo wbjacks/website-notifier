@@ -5,16 +5,17 @@ import com.wbjacks.website_notifier.data.models.Website;
 import com.wbjacks.website_notifier.util.HibernateUtil;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 @PetiteBean("websiteDao")
-public class WebsiteDaoImpl implements WebsiteDao {
+class WebsiteDaoImpl implements WebsiteDao {
     private final ObserverDao _observerDao;
 
     @PetiteInject
@@ -25,7 +26,8 @@ public class WebsiteDaoImpl implements WebsiteDao {
     @Override
     public void saveWebsiteObservation(Website website) {
         // NOTE: For now, only a single website is ever requested at once per email.
-        Observer observer = website.getObservers().stream().findFirst().get();
+        @SuppressWarnings("OptionalGetWithoutIsPresent") Observer observer = website.getObservers().stream()
+                .findFirst().get();
         Session session = HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -48,19 +50,52 @@ public class WebsiteDaoImpl implements WebsiteDao {
     }
 
     @Override
-    public List<Observer> getAllObserversForManualTesting() {
+    @SuppressWarnings("unchecked") // Criteria API is not type-safe
+    public Collection<Website> getAllWebsites() {
         Session session = HibernateUtil.getReadOnlySession();
         Transaction transaction = session.beginTransaction();
-        List<Observer> allObservers = new ArrayList<>();
+        Collection<Website> allWebsites = new ArrayList<>();
         try {
-            allObservers.addAll(session.createCriteria(Observer.class).list());
+            allWebsites.addAll(session.createCriteria(Website.class).list());
         } catch (HibernateException e) {
             transaction.rollback();
             throw e;
         }
         transaction.commit();
         session.close();
-        return allObservers;
+        return allWebsites;
     }
 
+    @Override
+    public Website getByUrl(String url) {
+        Session session = HibernateUtil.getReadOnlySession();
+        Transaction transaction = session.beginTransaction();
+        Website website;
+        try {
+            website = (Website) session.createCriteria(Website.class).add(Restrictions.eq("url", url)).uniqueResult();
+            Hibernate.initialize(website.getObservers()); // TODO: (wbjacks) can I build this in to the method?
+
+        } catch (HibernateException e) {
+            transaction.rollback();
+            throw e;
+        }
+        transaction.commit();
+        session.close();
+        return website;
+    }
+
+    @Override
+    public void updateWebsiteHash(long websiteId, String hash) {
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Website website = session.get(Website.class, websiteId);
+            website.setHash(hash);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            throw e;
+        }
+        transaction.commit();
+        session.close();
+    }
 }

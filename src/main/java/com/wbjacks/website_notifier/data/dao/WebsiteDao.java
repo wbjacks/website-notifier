@@ -3,10 +3,14 @@ package com.wbjacks.website_notifier.data.dao;
 import com.wbjacks.website_notifier.data.models.Observer;
 import com.wbjacks.website_notifier.data.models.Website;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface WebsiteDao {
     void saveWebsiteObservation(Website website);
 
-    List<Observer> getAllObserversForManualTesting();
+    Collection<Website> getAllWebsites();
+
+    Website getByUrl(String url);
+
+    void updateWebsiteHash(long websiteId, String hash);
 }

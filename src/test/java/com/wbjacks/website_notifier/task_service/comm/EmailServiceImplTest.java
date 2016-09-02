@@ -1,7 +1,9 @@
-package com.wbjacks.website_notifier.task_service;
+package com.wbjacks.website_notifier.task_service.comm;
 
 
 import com.wbjacks.website_notifier.data.models.Observer;
+import com.wbjacks.website_notifier.task_service.comm.EmailService;
+import com.wbjacks.website_notifier.task_service.comm.EmailServiceImpl;
 import com.wbjacks.website_notifier.util.ConfigurationManager;
 import org.easymock.EasyMockSupport;
 import org.junit.Ignore;

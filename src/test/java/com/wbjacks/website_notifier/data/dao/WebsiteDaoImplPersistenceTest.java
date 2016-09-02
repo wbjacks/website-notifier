@@ -93,4 +93,33 @@ public class WebsiteDaoImplPersistenceTest extends PersistentTestBase {
         transaction.commit();
         session.close();
     }
+
+    @Test
+    public void getByUrl() {
+        Observer observer = Observer.forEmail("foo@bar.com");
+        Website website = Website.forUrl("www.foo.com");
+        website.getObservers().add(observer);
+
+        WebsiteDaoImpl websiteDao = new WebsiteDaoImpl(new ObserverDaoImpl());
+        websiteDao.saveWebsiteObservation(website);
+        assertEquals("www.foo.com", websiteDao.getByUrl("www.foo.com").getUrl());
+    }
+
+    @Test
+    public void updateWebsiteHash() {
+        Observer observer = Observer.forEmail("foo@bar.com");
+        Website website = Website.forUrl("www.foo.com");
+        website.getObservers().add(observer);
+
+        WebsiteDaoImpl websiteDao = new WebsiteDaoImpl(new ObserverDaoImpl());
+        websiteDao.saveWebsiteObservation(website);
+        websiteDao.updateWebsiteHash(website.getWebsiteId(), "foobar");
+
+        Session session = HibernateUtil.getReadOnlySession();
+        Transaction transaction = session.beginTransaction();
+        assertEquals(1, session.createCriteria(Website.class).list().size());
+        assertEquals("foobar", session.get(Website.class, 1L).getHash());
+        transaction.commit();
+        session.close();
+    }
 }

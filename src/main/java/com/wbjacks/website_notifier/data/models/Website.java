@@ -52,6 +52,10 @@ public class Website {
         return hash;
     }
 
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
     public Set<Observer> getObservers() {
         return observers;
     }

@@ -11,7 +11,7 @@
         <property name="hibernate.connection.autocommit">true</property>
         <property name="hibernate.cache.provider_class">org.hibernate.cache.HashtableCacheProvider</property>
         <property name="hibernate.hbm2ddl.auto">create-drop</property>
-        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.show_sql">false</property>
         <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
     </session-factory>
 </hibernate-configuration>
