@@ -13,7 +13,7 @@ Example curl commands given for ease of use
 | Endpoint | Data | `curl` Example | Comment |
 | --- | --- | --- | --- |
 | `GET /hello`       | n/a                             | `curl localhost:4567/hello` | Say hello! |
-| `POST /observeUrl` | `url`: String, `email`: String` | `curl -H "Content-Type: application/json" -X POST -d '{"email":"foo@gmail.com","url":"http://www.bar.com/"}' localhost:4567/observeUrl` | Observe URL and send notifications to given email. Note that url must be fully qualified.
+| `POST /observeUrl` | `url`: String, `email`: String | `curl -H "Content-Type: application/json" -X POST -d '{"email":"foo@gmail.com","url":"http://www.bar.com/"}' localhost:4567/observeUrl` | Observe URL and send notifications to given email. Note that url must be fully qualified.
 
 ## Design Description
 The application was created foremost with portability in mind- the user must only add a
