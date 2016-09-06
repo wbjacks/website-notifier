@@ -9,7 +9,7 @@ import spark.Spark;
 
 import java.util.Map;
 
-@PetiteBean
+@PetiteBean("appController")
 public class AppControllerImpl implements AppController {
     private final ObservationRequestService _observationRequestService;
 
