@@ -9,7 +9,7 @@ public interface WebCallService {
     Document doGetRequest(String url) throws WebCallException;
 
     class WebCallException extends Exception {
-        protected WebCallException(String url, IOException e) {
+        WebCallException(String url, IOException e) {
             super(String.format("Exception when fetching from url [%s]. Exception is: %s", url, e.getMessage()));
         }
     }

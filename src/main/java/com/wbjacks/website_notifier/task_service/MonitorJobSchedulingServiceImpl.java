@@ -4,6 +4,7 @@ import com.wbjacks.website_notifier.data.dao.WebsiteDao;
 import com.wbjacks.website_notifier.data.models.Website;
 import com.wbjacks.website_notifier.task_service.comm.WebCallService;
 import com.wbjacks.website_notifier.util.ConfigurationManager;
+import com.wbjacks.website_notifier.util.HashService;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
 import org.apache.commons.configuration.ConfigurationException;
@@ -12,9 +13,6 @@ import org.jsoup.nodes.Document;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 @PetiteBean("monitorJobSchedulingService")
@@ -23,26 +21,24 @@ public class MonitorJobSchedulingServiceImpl implements MonitorJobSchedulingServ
     private static final String JOB_GROUP = "web-job";
     private static final Logger LOGGER = Logger.getLogger(MonitorJobSchedulingServiceImpl.class);
 
-    private final EmailTaskManagerService _emailTaskManagerService;
     private final ConfigurationManager.JobSchedulingConfigurations _jobSchedulingConfigurations;
     private final Scheduler _scheduler;
-    private final WebCallService _webCallService;
     private final WebsiteDao _websiteDao;
 
 
     @PetiteInject
     private MonitorJobSchedulingServiceImpl(EmailTaskManagerService emailTaskManagerService, ConfigurationManager
-            configurationManager, WebCallService webCallService, WebsiteDao websiteDao) throws SchedulerException, ConfigurationException {
-        _emailTaskManagerService = emailTaskManagerService;
+            configurationManager, HashService hashService, WebCallService webCallService, WebsiteDao websiteDao)
+            throws SchedulerException, ConfigurationException {
         _jobSchedulingConfigurations = configurationManager.getJobSchedulingConfigurations();
         _scheduler = StdSchedulerFactory.getDefaultScheduler();
-        _webCallService = webCallService;
         _websiteDao = websiteDao;
 
         // Scheduler context used to inject dependencies to job:
         // http://stackoverflow.com/questions/12777057/how-to-pass-instance-variables-into-quartz-job
-        _scheduler.getContext().put("emailTaskManagerService", _emailTaskManagerService);
-        _scheduler.getContext().put("webCallService", _webCallService);
+        _scheduler.getContext().put("emailTaskManagerService", emailTaskManagerService);
+        _scheduler.getContext().put("hashService", hashService);
+        _scheduler.getContext().put("webCallService", webCallService);
         _scheduler.getContext().put("websiteDao", _websiteDao);
 
         _scheduler.start();
@@ -67,8 +63,7 @@ public class MonitorJobSchedulingServiceImpl implements MonitorJobSchedulingServ
                         .repeatForever()).startNow().build();
         try {
             _scheduler.scheduleJob(job, trigger);
-        }
-        catch (SchedulerException e) {
+        } catch (SchedulerException e) {
             LOGGER.error("Error scheduling job", e);
             throw e;
         }
@@ -81,12 +76,12 @@ public class MonitorJobSchedulingServiceImpl implements MonitorJobSchedulingServ
     }
 
     public static class MonitorJob implements Job {
-        private static final String HASHING_ALGORITHM = "MD5";
         private static final Logger LOGGER = Logger.getLogger(MonitorJob.class);
 
         private String _monitoredUrl;
 
         private EmailTaskManagerService _emailTaskManagerService;
+        private HashService _hashService;
         private WebCallService _webCallService;
         private WebsiteDao _websiteDao;
 
@@ -108,18 +103,9 @@ public class MonitorJobSchedulingServiceImpl implements MonitorJobSchedulingServ
                 throw jobExecutionException;
             }
 
-            String hash;
-            try {
-                hash = new HexBinaryAdapter().marshal(MessageDigest.getInstance(HASHING_ALGORITHM).digest(document
-                        .body().toString().getBytes()));
-            } catch (NoSuchAlgorithmException e) {
-                // This is fatal for this (and all...) jobs
-                JobExecutionException jobExecutionException = new JobExecutionException(e);
-                jobExecutionException.unscheduleAllTriggers();
-                throw jobExecutionException;
-            }
-
+            String hash = _hashService.getHash(document.body().toString());
             if (!hash.equals(website.getHash())) {
+                LOGGER.info(String.format("Website [%s] has changed, notifying users.", website.getUrl()));
                 _websiteDao.updateWebsiteHash(website.getWebsiteId(), hash);
                 _emailTaskManagerService.sendEmailToObservers(website.getObservers());
             }
@@ -128,6 +114,10 @@ public class MonitorJobSchedulingServiceImpl implements MonitorJobSchedulingServ
         // The below are used for context injection from the scheduler
         public void setEmailTaskManagerService(EmailTaskManagerService emailTaskManagerService) {
             _emailTaskManagerService = emailTaskManagerService;
+        }
+
+        public void setHashService(HashService hashService) {
+            _hashService = hashService;
         }
 
         public void setMonitoredUrl(String monitoredUrl) {

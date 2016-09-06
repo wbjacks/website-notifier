@@ -2,8 +2,6 @@ package com.wbjacks.website_notifier.task_service.comm;
 
 
 import com.wbjacks.website_notifier.data.models.Observer;
-import com.wbjacks.website_notifier.task_service.comm.EmailService;
-import com.wbjacks.website_notifier.task_service.comm.EmailServiceImpl;
 import com.wbjacks.website_notifier.util.ConfigurationManager;
 import org.apache.commons.configuration.ConfigurationException;
 import org.easymock.EasyMockSupport;
@@ -16,8 +14,9 @@ import static org.junit.Assert.fail;
 
 public class EmailServiceImplTest extends EasyMockSupport {
     @Test
+    @Ignore
     public void sendEmail() throws EmailServiceImpl.EmailConfigurationException, ConfigurationException {
-        Observer observer = Observer.forEmail("greenerside71@gmail.com"); // Add valid email to test
+        Observer observer = Observer.forEmail(""); // Add valid email to test
 
         EmailService emailService = new EmailServiceImpl(new ConfigurationManager());
         emailService.sendEmailToObserver(observer);
