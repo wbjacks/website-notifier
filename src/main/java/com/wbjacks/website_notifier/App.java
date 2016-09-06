@@ -10,7 +10,6 @@ import org.quartz.SchedulerException;
 public class App {
     private static final PetiteContainer CONTAINER = new PetiteContainer();
     private static final Logger LOGGER = Logger.getLogger(App.class);
-    private static final int SIGINT = 2;
 
     public static void main(String[] args) {
         new AutomagicPetiteConfigurator().configure(CONTAINER);
@@ -27,7 +26,7 @@ public class App {
             monitorJobSchedulingService.launchJobsForAllWebsites();
         } catch (SchedulerException e) {
             LOGGER.error(String.format("Error scheduling job: %s", e.getMessage()));
-            System.exit(SIGINT);
+            System.exit(1);
         }
         CONTAINER.getBean(AppController.class).initializeRoutes();
     }

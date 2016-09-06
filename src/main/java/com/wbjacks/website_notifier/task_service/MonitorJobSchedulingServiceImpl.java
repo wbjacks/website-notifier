@@ -6,6 +6,7 @@ import com.wbjacks.website_notifier.task_service.comm.WebCallService;
 import com.wbjacks.website_notifier.util.ConfigurationManager;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.quartz.*;
@@ -31,7 +32,7 @@ public class MonitorJobSchedulingServiceImpl implements MonitorJobSchedulingServ
 
     @PetiteInject
     private MonitorJobSchedulingServiceImpl(EmailTaskManagerService emailTaskManagerService, ConfigurationManager
-            configurationManager, WebCallService webCallService, WebsiteDao websiteDao) throws SchedulerException {
+            configurationManager, WebCallService webCallService, WebsiteDao websiteDao) throws SchedulerException, ConfigurationException {
         _emailTaskManagerService = emailTaskManagerService;
         _jobSchedulingConfigurations = configurationManager.getJobSchedulingConfigurations();
         _scheduler = StdSchedulerFactory.getDefaultScheduler();

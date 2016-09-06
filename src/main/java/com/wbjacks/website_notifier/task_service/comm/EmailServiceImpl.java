@@ -5,6 +5,7 @@ import com.wbjacks.website_notifier.util.ConfigurationManager;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.StringUtil;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
@@ -15,7 +16,7 @@ public class EmailServiceImpl implements EmailService {
     private final ConfigurationManager.EmailConfigurations _emailConfigurations;
 
     @PetiteInject
-    EmailServiceImpl(ConfigurationManager configurationManager) {
+    EmailServiceImpl(ConfigurationManager configurationManager) throws ConfigurationException {
         _emailConfigurations = configurationManager.getEmailConfigurations();
     }
 

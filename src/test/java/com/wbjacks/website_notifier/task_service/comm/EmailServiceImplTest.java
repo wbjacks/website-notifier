@@ -5,6 +5,7 @@ import com.wbjacks.website_notifier.data.models.Observer;
 import com.wbjacks.website_notifier.task_service.comm.EmailService;
 import com.wbjacks.website_notifier.task_service.comm.EmailServiceImpl;
 import com.wbjacks.website_notifier.util.ConfigurationManager;
+import org.apache.commons.configuration.ConfigurationException;
 import org.easymock.EasyMockSupport;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,16 +16,15 @@ import static org.junit.Assert.fail;
 
 public class EmailServiceImplTest extends EasyMockSupport {
     @Test
-    @Ignore // Remove to send email
-    public void sendEmail() throws EmailServiceImpl.EmailConfigurationException {
-        Observer observer = Observer.forEmail(""); // Add valid email to test
+    public void sendEmail() throws EmailServiceImpl.EmailConfigurationException, ConfigurationException {
+        Observer observer = Observer.forEmail("greenerside71@gmail.com"); // Add valid email to test
 
         EmailService emailService = new EmailServiceImpl(new ConfigurationManager());
         emailService.sendEmailToObserver(observer);
     }
 
     @Test
-    public void throwsErrorForMalformedSenderEmailConfiguration() {
+    public void throwsErrorForMalformedSenderEmailConfiguration() throws ConfigurationException {
         Observer observer = Observer.forEmail("foo@bar.com");
 
         ConfigurationManager configurationManager = createStrictMock(ConfigurationManager.class);
@@ -50,7 +50,7 @@ public class EmailServiceImplTest extends EasyMockSupport {
     }
 
     @Test
-    public void throwsErrorForBadUserEmailConfiguration() {
+    public void throwsErrorForBadUserEmailConfiguration() throws ConfigurationException {
         Observer observer = Observer.forEmail("I am not an email address");
 
         ConfigurationManager configurationManager = createStrictMock(ConfigurationManager.class);
@@ -82,7 +82,7 @@ public class EmailServiceImplTest extends EasyMockSupport {
     }
 
     @Test
-    public void throwsErrorWhenUnableToSend() {
+    public void throwsErrorWhenUnableToSend() throws ConfigurationException {
         Observer observer = Observer.forEmail("bar@foo.com");
 
         ConfigurationManager configurationManager = createStrictMock(ConfigurationManager.class);
