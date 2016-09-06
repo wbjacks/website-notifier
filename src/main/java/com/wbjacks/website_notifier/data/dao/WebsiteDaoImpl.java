@@ -73,7 +73,7 @@ class WebsiteDaoImpl implements WebsiteDao {
         Website website;
         try {
             website = (Website) session.createCriteria(Website.class).add(Restrictions.eq("url", url)).uniqueResult();
-            Hibernate.initialize(website.getObservers()); // TODO: (wbjacks) can I build this in to the method?
+            Hibernate.initialize(website.getObservers());
 
         } catch (HibernateException e) {
             transaction.rollback();

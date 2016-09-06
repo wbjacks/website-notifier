@@ -4,6 +4,7 @@ import com.wbjacks.website_notifier.data.models.Observer;
 import com.wbjacks.website_notifier.task_service.comm.EmailService;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
+import org.apache.log4j.Logger;
 
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -11,6 +12,7 @@ import java.util.concurrent.Executors;
 
 @PetiteBean("emailTaskManagerService")
 public class EmailTaskManagerServiceImpl implements EmailTaskManagerService {
+    private static final Logger LOGGER = Logger.getLogger(EmailTaskManagerServiceImpl.class);
     private final EmailService _emailService;
     private final Executor _executor;
 
@@ -27,7 +29,8 @@ public class EmailTaskManagerServiceImpl implements EmailTaskManagerService {
                 try {
                     _emailService.sendEmailToObserver(observer);
                 } catch (EmailService.EmailConfigurationException e) {
-                    // TODO: (wbjacks) add logger
+                    LOGGER.error(String.format("Error sending mail to %s, skipping job. Error is: %s.", observer
+                            .getEmail(), e.getMessage()));
                 }
             });
         }

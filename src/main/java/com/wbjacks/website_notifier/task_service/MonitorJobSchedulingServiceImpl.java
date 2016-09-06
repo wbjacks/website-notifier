@@ -89,7 +89,6 @@ public class MonitorJobSchedulingServiceImpl implements MonitorJobSchedulingServ
 
         @Override
         public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-            // TODO: (wbjacks) reschedule for long calls
             LOGGER.info(String.format("Job [%s] executing", jobExecutionContext.getJobDetail().getKey()));
             System.out.println(String.format("Job [%s] executing", jobExecutionContext.getJobDetail().getKey()));
             Website website = _websiteDao.getByUrl(_monitoredUrl);

@@ -39,7 +39,6 @@ public class Website {
         return url;
     }
 
-    // TODO: (wbjacks) only for test, hide me
     public void setUrl(String url) {
         this.url = url;
     }
