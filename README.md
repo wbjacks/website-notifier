@@ -66,3 +66,10 @@ simultaneously. The limit of the current setup, therefore, is fairly dependent o
 The maintainers could also add code to stagger the Quartz job triggers, requiring a
 minimum interval to prevent DDOS, but otherwise evenly distributing the jobs to prevent
 rushing the processor.
+
+## A Note on Testing
+I had trouble coming up with a webpage to test out the application, as many pages these
+days use dynamic content rather than a static body, and I needed a way to force a change
+to test for notifications. My solution was to use [Heroku](https://www.heroku.com) to
+[create a static webpage](https://devcenter.heroku.com/articles/static-sites-ruby), which
+I could then change by redeploying with a slightly different index.html.
