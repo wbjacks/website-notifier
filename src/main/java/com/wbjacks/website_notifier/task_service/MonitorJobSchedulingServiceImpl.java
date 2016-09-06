@@ -98,7 +98,9 @@ public class MonitorJobSchedulingServiceImpl implements MonitorJobSchedulingServ
             try {
                 document = _webCallService.doGetRequest(website.getUrl());
             } catch (Exception e) {
-                throw new JobExecutionException(e); // TODO: (wbjacks) reschedule
+                JobExecutionException jobExecutionException = new JobExecutionException(e);
+                jobExecutionException.refireImmediately();
+                throw jobExecutionException;
             }
 
             String hash;
@@ -106,7 +108,10 @@ public class MonitorJobSchedulingServiceImpl implements MonitorJobSchedulingServ
                 hash = new HexBinaryAdapter().marshal(MessageDigest.getInstance(HASHING_ALGORITHM).digest(document
                         .body().toString().getBytes()));
             } catch (NoSuchAlgorithmException e) {
-                throw new JobExecutionException(e); // TODO: (wbjacks) reschedule
+                // This is fatal for this (and all...) jobs
+                JobExecutionException jobExecutionException = new JobExecutionException(e);
+                jobExecutionException.unscheduleAllTriggers();
+                throw jobExecutionException;
             }
 
             if (!hash.equals(website.getHash())) {
