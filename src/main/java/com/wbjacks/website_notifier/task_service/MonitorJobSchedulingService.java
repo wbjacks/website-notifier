@@ -5,5 +5,8 @@ import org.quartz.SchedulerException;
 
 public interface MonitorJobSchedulingService {
     void launchJobsForAllWebsites() throws SchedulerException;
+
     void scheduleJobForWebsite(Website website) throws SchedulerException;
+
+    void shutdown() throws SchedulerException;
 }

@@ -74,6 +74,11 @@ public class MonitorJobSchedulingServiceImpl implements MonitorJobSchedulingServ
         LOGGER.info(String.format("Job [%s] scheduled for URL [%s].", job.getKey(), website.getUrl()));
     }
 
+    @Override
+    public void shutdown() throws SchedulerException {
+        _scheduler.shutdown();
+    }
+
     public static class MonitorJob implements Job {
         private static final String HASHING_ALGORITHM = "MD5";
         private static final Logger LOGGER = Logger.getLogger(MonitorJob.class);

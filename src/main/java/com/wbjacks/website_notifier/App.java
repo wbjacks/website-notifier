@@ -14,8 +14,17 @@ public class App {
 
     public static void main(String[] args) {
         new AutomagicPetiteConfigurator().configure(CONTAINER);
+        MonitorJobSchedulingService monitorJobSchedulingService = CONTAINER.getBean(MonitorJobSchedulingService.class);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                monitorJobSchedulingService.shutdown();
+            } catch (SchedulerException e) {
+                LOGGER.error("Error closing job scheduler, message is: " + e);
+            }
+        }));
+
         try {
-            CONTAINER.getBean(MonitorJobSchedulingService.class).launchJobsForAllWebsites();
+            monitorJobSchedulingService.launchJobsForAllWebsites();
         } catch (SchedulerException e) {
             LOGGER.error(String.format("Error scheduling job: %s", e.getMessage()));
             System.exit(SIGINT);
