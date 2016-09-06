@@ -9,6 +9,7 @@ when the website at the given URL changes.
 
 ## API
 Example curl commands given for ease of use
+
 | Endpoint | Data | `curl` Example | Comment |
 | --- | --- | --- | --- |
 | `GET /hello` | n/a | `curl localhost:4567/hello` | Say hello! |
